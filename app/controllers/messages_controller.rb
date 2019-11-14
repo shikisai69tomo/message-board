@@ -1,10 +1,12 @@
 class MessagesController < ApplicationController
+  before_acton :set_message, only: [:show, :edit, :update, :destroy]
+    
     def index
         @messages = Message.all
     end
     
     def show
-        @message = Message.find(params[:id])
+        set_message
     end
     
     def new
@@ -15,7 +17,7 @@ class MessagesController < ApplicationController
         @message.save
         flash[:success] = 'Message が正常に投稿されました'
         redirect_to @message
-      else
+　　else
         flash.now[:danger] = 'Message　が投稿されませんでした'
         render :new
     end
@@ -45,6 +47,10 @@ class MessagesController < ApplicationController
     end
     
     private
+    
+    def set_message
+      @message = Message.find(params[:id])
+    end
     
     def message_params
         parms.require(:message).permit(:content)
